@@ -11,7 +11,8 @@ export default defineConfig({
 
   plugins: [
     nitro({
-      preset: "vercel",
+      preset: "netlify",
+
       serverEntry: {
         handler: "src/apis/apis.index.ts",
         format: "web"
