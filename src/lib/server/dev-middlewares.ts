@@ -1,7 +1,6 @@
 import type { Context, Next } from "hono"
 import { describeRoute } from "hono-openapi"
 import type { OpenAPIV3 } from "openapi-types"
-import type { TSchema } from "typebox"
 
 import { ServerENV } from "./env"
 
@@ -24,7 +23,6 @@ export const openApiQueryParam = (
 
 export const apiRouteDoc = (options: {
   tag: string
-  requestBody?: TSchema
   rawSchema?: {
     [media: string]: OpenAPIV3.MediaTypeObject
   }
@@ -38,24 +36,5 @@ export const apiRouteDoc = (options: {
         ...(options.summary !== undefined && { summary: options.summary }),
         ...(options.parameters !== undefined && {
           parameters: options.parameters
-        }),
-        ...(options.rawSchema !== undefined
-          ? {
-              requestBody: {
-                required: true as const,
-                content: options.rawSchema
-              }
-            }
-          : options.requestBody !== undefined
-            ? {
-                requestBody: {
-                  required: true as const,
-                  content: {
-                    "application/json": {
-                      schema: options.requestBody
-                    }
-                  }
-                }
-              }
-            : {})
+        })
       })
