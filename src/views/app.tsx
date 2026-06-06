@@ -4,6 +4,7 @@ import { DeveloperCard } from "#app/components/blocks/DeveloperCard"
 import { ForecastGrid } from "#app/components/blocks/ForecastGrid"
 import { HourlyForecast } from "#app/components/blocks/HourlyForecast"
 import { SearchCity } from "#app/components/blocks/SearchCity"
+import { WeatherLoader } from "#app/components/blocks/WeatherLoader"
 import { useCurrentLocation } from "#app/hooks/useCurrentLocation"
 import { useWeather } from "#app/hooks/useWeather"
 
@@ -26,7 +27,7 @@ export const MainApp = () => {
       <SearchCity />
       {location && (
         <>
-          {isLoading && <div>Loading weather...</div>}
+          {isLoading && <WeatherLoader />}
           {error && (
             <div className="text-destructive">Error: {error.message}</div>
           )}
