@@ -1,0 +1,1 @@
+ALTER TABLE "integrations_creds" ADD COLUMN "updated_at" timestamp DEFAULT now();

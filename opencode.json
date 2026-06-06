@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "lsp": {
+    "oxlint": {
+      "command": ["./node_modules/.bin/oxlint", "--lsp"],
+      "extensions": [".ts", ".tsx", ".js", ".jsx"]
+    },
+    "oxfmt": {
+      "command": ["./node_modules/.bin/oxfmt", "--lsp"],
+      "extensions": [".ts", ".tsx", ".js", ".jsx"]
+    },
+    "typescript": {
+      "command": ["typescript-language-server", "--stdio"],
+      "extensions": [".ts", ".tsx", ".js", ".jsx"]
+    }
+  }
+}

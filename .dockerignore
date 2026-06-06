@@ -1,0 +1,9 @@
+.git
+.gitignore
+node_modules
+dist
+.nitro
+.env.local
+.env
+*.md
+AGENTS*

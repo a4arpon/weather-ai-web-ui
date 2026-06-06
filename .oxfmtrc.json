@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": ["node_modules", ".tanstack", ".output"],
+  "printWidth": 80,
+  "useTabs": false,
+  "semi": false,
+  "sortImports": true,
+  "tabWidth": 2,
+  "trailingComma": "none",
+  "sortTailwindcss": true
+}
