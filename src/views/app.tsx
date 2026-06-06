@@ -4,7 +4,9 @@ import { DeveloperCard } from "#app/components/blocks/DeveloperCard"
 import { ForecastGrid } from "#app/components/blocks/ForecastGrid"
 import { HourlyForecast } from "#app/components/blocks/HourlyForecast"
 import { SearchCity } from "#app/components/blocks/SearchCity"
+import { WeatherAdvisory } from "#app/components/blocks/WeatherAdvisory"
 import { WeatherLoader } from "#app/components/blocks/WeatherLoader"
+import { WorkSuitability } from "#app/components/blocks/WorkSuitability"
 import { useCurrentLocation } from "#app/hooks/useCurrentLocation"
 import { useWeather } from "#app/hooks/useWeather"
 
@@ -34,6 +36,11 @@ export const MainApp = () => {
           {weatherData && (
             <>
               <CurrentWeather data={weatherData} />
+              <WeatherAdvisory current={weatherData.current} />
+              <WorkSuitability
+                current={weatherData.current}
+                hourly={weatherData.hourly}
+              />
               <HourlyForecast hourly={weatherData.hourly} units="metric" />
               <ForecastGrid daily={weatherData.daily} units="metric" />
             </>

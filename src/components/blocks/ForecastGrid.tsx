@@ -1,4 +1,4 @@
-import { format } from "date-fns"
+import { format, isToday } from "date-fns"
 import { DropletsIcon, Sunrise, SunsetIcon, WindIcon } from "lucide-react"
 import {
   LineChart,
@@ -10,6 +10,7 @@ import {
   CartesianGrid
 } from "recharts"
 
+import { cn } from "#app/lib/client/utils"
 import type { DailyForecast } from "#app/types/common/weather"
 
 import {
@@ -98,49 +99,72 @@ export function ForecastGrid({ daily, units }: ForecastGridProps) {
             {daily.map((day) => (
               <div
                 key={day.date}
-                className="bg-card inline-flex w-44 shrink-0 flex-col items-center rounded-lg border p-3 text-center"
+                className={cn(
+                  "group relative inline-flex w-48 shrink-0 flex-col items-center rounded-xl border p-4 text-center",
+                  isToday(day.date)
+                    ? "border-primary bg-primary/5"
+                    : "bg-card border-border"
+                )}
               >
-                <p className="text-sm font-medium">
+                {/* Date */}
+                <p className="text-foreground text-sm font-semibold">
                   {format(new Date(day.date), "EEE, MMM d")}
-                </p>
-                <img
-                  src={day.icon}
-                  alt="condition"
-                  className="my-1 h-10 w-10 object-contain"
-                />
-                <p className="text-base font-bold">
-                  {Math.round(day.temp_max)}/{Math.round(day.temp_min)}
-                  {tempUnit}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  💧 {day.precipitation_probability}% rain
+                  {isToday(day.date) && (
+                    <span className="bg-primary text-primary-foreground ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+                      Today
+                    </span>
+                  )}
                 </p>
 
-                {/* Extra details row: sunrise / sunset */}
-                <div className="border-border text-muted-foreground mt-2 flex w-full justify-between gap-1 border-t pt-1.5 text-[11px]">
-                  <div className="flex items-center gap-0.5">
-                    <Sunrise className="h-3 w-3" />
-                    <span>{formatTime(day.sunrise)}</span>
-                  </div>
-                  <div className="flex items-center gap-0.5">
-                    <SunsetIcon className="h-3 w-3" />
-                    <span>{formatTime(day.sunset)}</span>
+                {/* Icon + Temperature row */}
+                <div className="my-2 flex items-center justify-center gap-2">
+                  <img
+                    src={day.icon}
+                    alt="condition"
+                    className="h-12 w-12 object-contain"
+                  />
+                  <div className="text-left">
+                    <p className="text-lg leading-tight font-bold">
+                      {Math.round(day.temp_max)}° / {Math.round(day.temp_min)}°
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {tempUnit === "°C" ? "Celsius" : "Fahrenheit"}
+                    </p>
                   </div>
                 </div>
 
-                {/* Precipitation amount + wind max */}
-                <div className="text-muted-foreground mt-1 flex w-full justify-between gap-1 text-[11px]">
-                  <div className="flex items-center gap-0.5">
-                    <DropletsIcon className="h-3 w-3 text-blue-400" />
-                    <span>{day.precipitation_sum?.toFixed(1) || 0} mm</span>
-                  </div>
-                  <div className="flex items-center gap-0.5">
-                    <WindIcon className="h-3 w-3" />
-                    <span>
-                      {Math.round(day.wind_max)}{" "}
-                      {units === "metric" ? "m/s" : "mph"}
-                    </span>
-                  </div>
+                {/* Rain chance */}
+                <p className="text-muted-foreground mb-1 flex items-center gap-1 text-xs">
+                  <span className="text-base">💧</span>{" "}
+                  {day.precipitation_probability}% rain
+                </p>
+
+                {/* Divider */}
+                <div className="bg-border my-2 h-px w-full" />
+
+                {/* Sunrise / Sunset */}
+                <div className="text-muted-foreground mb-1 flex w-full justify-between text-xs">
+                  <span className="flex items-center gap-1">
+                    <Sunrise className="h-3.5 w-3.5" />{" "}
+                    {formatTime(day.sunrise)}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <SunsetIcon className="h-3.5 w-3.5" />{" "}
+                    {formatTime(day.sunset)}
+                  </span>
+                </div>
+
+                {/* Rain amount + Wind max */}
+                <div className="text-muted-foreground flex w-full justify-between text-xs">
+                  <span className="flex items-center gap-1">
+                    <DropletsIcon className="h-3.5 w-3.5 text-blue-400" />{" "}
+                    {day.precipitation_sum?.toFixed(1) || 0} mm
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <WindIcon className="h-3.5 w-3.5" />{" "}
+                    {Math.round(day.wind_max)}{" "}
+                    {units === "metric" ? "m/s" : "mph"}
+                  </span>
                 </div>
               </div>
             ))}

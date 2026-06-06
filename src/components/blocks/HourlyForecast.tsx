@@ -103,48 +103,50 @@ export function HourlyForecast({ hourly, units }: HourlyForecastProps) {
           </ResponsiveContainer>
         </div>
 
-        <ScrollArea className="w-full rounded-md whitespace-nowrap">
-          <div className="flex space-x-3 pb-4 lg:overflow-x-auto">
+        <ScrollArea className="w-full rounded-md">
+          <div className="flex space-x-4 pb-4 lg:overflow-x-auto">
             {next24h?.map((hour, idx) => (
               <div
                 key={idx}
-                className="bg-card inline-flex w-32 shrink-0 flex-col items-center rounded-lg border p-2 text-center"
+                className="bg-card w-36 shrink-0 rounded-xl border p-3 text-center"
               >
-                <p className="text-xs font-medium">
-                  {format(new Date(hour?.time), "HH:mm")}
+                <p className="text-sm font-semibold">
+                  {format(new Date(hour?.time), "h a")}
                 </p>
-                <img
-                  src={hour?.icon}
-                  alt="condition"
-                  className="my-1 h-8 w-8 object-contain"
-                />
-                <p className="text-sm font-bold">
-                  {Math.round(hour?.temperature)}
-                  {tempUnit}
-                </p>
-                <div className="text-muted-foreground mt-1 flex flex-col gap-0.5 text-[10px]">
-                  <div className="flex items-center justify-center gap-1">
-                    <Thermometer className="h-2.5 w-2.5" />
-                    <span>
-                      FL {Math.round(hour?.feels_like)}
-                      {tempUnit}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Eye className="h-2.5 w-2.5" />
-                    <span>UV {hour?.uv_index.toFixed(1)}</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Wind className="h-2.5 w-2.5" />
-                    <span>
-                      {Math.round(hour?.wind_speed)}{" "}
-                      {units === "metric" ? "m/s" : "mph"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Droplets className="h-2.5 w-2.5 text-blue-400" />
-                    <span>{hour?.precipitation_probability}%</span>
-                  </div>
+
+                <div className="my-2 flex flex-col items-center">
+                  <img
+                    src={hour?.icon}
+                    alt="condition"
+                    className="h-10 w-10 object-contain"
+                  />
+                  <p className="text-xl font-bold">
+                    {Math.round(hour?.temperature)}°
+                    {tempUnit === "°C" ? "C" : "F"}
+                  </p>
+                </div>
+
+                <div className="text-muted-foreground mb-1 flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-1">
+                    <Thermometer className="h-3 w-3" />
+                    FL {Math.round(hour?.feels_like)}°
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Eye className="h-3 w-3" />
+                    UV {hour?.uv_index.toFixed(1)}
+                  </span>
+                </div>
+
+                <div className="text-muted-foreground flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-1">
+                    <Wind className="h-3 w-3" />
+                    {Math.round(hour?.wind_speed)}{" "}
+                    {units === "metric" ? "m/s" : "mph"}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Droplets className="h-3 w-3 text-blue-400" />
+                    {hour?.precipitation_probability}%
+                  </span>
                 </div>
               </div>
             ))}
