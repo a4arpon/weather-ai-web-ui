@@ -4,6 +4,7 @@ import "./assets/index.css"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 
+import { LocationProvider } from "./hooks/useCurrentLocation"
 import { MainApp } from "./views/app"
 
 const queryClient = new QueryClient({
@@ -17,7 +18,9 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <MainApp />
+      <LocationProvider>
+        <MainApp />
+      </LocationProvider>
     </QueryClientProvider>
   </StrictMode>
 )

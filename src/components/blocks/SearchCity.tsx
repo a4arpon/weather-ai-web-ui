@@ -1,6 +1,14 @@
-import { AlertCircle, Check, Loader2, MapPin, Trash } from "lucide-react"
+import {
+  AlertCircle,
+  ArrowLeftRightIcon,
+  Check,
+  Loader2,
+  MapPin,
+  Trash
+} from "lucide-react"
 import { useState } from "react"
 
+import { useCurrentLocation } from "#app/hooks/useCurrentLocation"
 import { useDebounce } from "#app/hooks/useDebounce"
 import { useOpenMeteo } from "#app/hooks/useOpenMeteo"
 
@@ -15,28 +23,14 @@ import {
 import { Input } from "../ui/input"
 
 export const SearchCity = () => {
+  const { location, setLocation } = useCurrentLocation()
   const [rawSearch, setRawSearch] = useState("")
-  const [selectedCity, setSelectedCity] = useState<{
-    name: string
-    lat: number
-    lon: number
-    country: string
-    admin1?: string
-  } | null>(null)
-
   const debouncedSearch = useDebounce(rawSearch, 400)
   const { data: cities, isLoading, error } = useOpenMeteo(debouncedSearch)
 
   const handleClear = () => {
     setRawSearch("")
-    setSelectedCity(null)
-    // Clear URL params
-    const url = new URL(window.location.href)
-    url.searchParams.delete("lat")
-    url.searchParams.delete("lon")
-    url.searchParams.delete("city")
-    window.history.pushState({}, "", url)
-    window.dispatchEvent(new PopStateEvent("popstate"))
+    setLocation(null) // clear selected city
   }
 
   const handleSelectCity = (city: {
@@ -46,27 +40,19 @@ export const SearchCity = () => {
     country: string
     admin1?: string
   }) => {
-    setSelectedCity(city)
+    setLocation(city) // store in context
     setRawSearch("")
-
-    const url = new URL(window.location.href)
-    url.searchParams.set("lat", city.lat.toString())
-    url.searchParams.set("lon", city.lon.toString())
-    url.searchParams.set("city", city.name)
-    window.history.pushState({}, "", url)
-    window.dispatchEvent(new PopStateEvent("popstate"))
   }
 
   const handleChangeCity = () => {
-    setSelectedCity(null)
+    setLocation(null) // go back to search
     setRawSearch("")
-
     document
       .querySelector<HTMLInputElement>("input[placeholder*='city']")
       ?.focus()
   }
 
-  if (selectedCity) {
+  if (location) {
     return (
       <Card>
         <CardHeader>
@@ -80,15 +66,16 @@ export const SearchCity = () => {
             <div className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-500" />
               <div>
-                <p className="font-medium">{selectedCity.name}</p>
+                <p className="font-medium">{location.name}</p>
                 <p className="text-muted-foreground text-xs">
-                  {selectedCity.admin1 ? `${selectedCity.admin1}, ` : ""}
-                  {selectedCity.country}
+                  {location.admin1 ? `${location.admin1}, ` : ""}
+                  {location.country}
                 </p>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={handleChangeCity}>
+            <Button variant="default" onClick={handleChangeCity}>
               Change City
+              <ArrowLeftRightIcon />
             </Button>
           </div>
         </CardContent>
@@ -111,6 +98,7 @@ export const SearchCity = () => {
             value={rawSearch}
             onChange={(e) => setRawSearch(e.target.value)}
             placeholder="e.g., Nairobi, Tokyo, London"
+            className="ring-primary ring-2"
           />
           <Button
             variant="destructive"
@@ -130,7 +118,7 @@ export const SearchCity = () => {
             </p>
           )}
           {rawSearch.trim().length === 0 && (
-            <p className="text-muted-foreground py-4 text-center text-sm">
+            <p className="text-muted-foreground py-4 text-center lg:text-3xl">
               ✨ Start typing a city name...
             </p>
           )}
