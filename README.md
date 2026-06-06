@@ -3,7 +3,7 @@
 A single‑page weather app that consumes the WeatherAI API.  
 Built to show **real‑world API integration**, **server‑side caching**, and **clean frontend architecture** – without over‑engineering.
 
-🔗 **Live:** [https://weather-ai-dashboard-xia.deno.dev](https://weather-ai-dashboard-xia.deno.dev)  
+🔗 **Live:** [https://weather-ai-web-ui.netlify.app/](https://weather-ai-web-ui.netlify.app/)  
 📦 **Repo:** [github.com/a4arpon/weather-ai-web-ui.git](https://github.com/a4arpon/weather-ai-web-ui.git)
 
 ---
